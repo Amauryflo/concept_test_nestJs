@@ -12,11 +12,16 @@ export class AuthService {
   }
 
   async signIn({ username, pass }: any) {
+    const uuid = uuidv4();
+    await this.dbService.startTransaction();
+
     try {
-      const uuid = uuidv4();
       const query = 'INSERT INTO users (id, username, pass) VALUES (?,?,?)';
-      return this.dbService.query(query, [uuid, username, pass]);
+      await this.dbService.query(query, [uuid, username, pass]);
+      await this.dbService.commitTransaction();
+      return { success: true, message: 'Se registro el usuario correctamente' };
     } catch (e) {
+      await this.dbService.rollbackTransaction();
       throw new BadRequestException('Error al crear usuario', e);
     }
   }
