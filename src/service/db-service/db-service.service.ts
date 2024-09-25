@@ -23,4 +23,19 @@ export class DbServiceService implements OnModuleInit, OnModuleDestroy {
     const [results] = await this.connection.execute(query, params);
     return results;
   }
+
+  // Iniciar una transacción
+  async startTransaction() {
+    await this.connection.beginTransaction();
+  }
+
+  // Confirmar una transacción
+  async commitTransaction() {
+    await this.connection.commit();
+  }
+
+  // Deshacer una transacción
+  async rollbackTransaction() {
+    await this.connection.rollback();
+  }
 }
